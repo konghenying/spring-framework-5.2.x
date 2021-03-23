@@ -167,7 +167,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private static final boolean shouldIgnoreSpel = SpringProperties.getFlag("spring.spel.ignore");
 
 
-	static {
+	static {// 先加载上下文关闭事件,用于防止在webLogic8.1关闭的时候出现奇怪的类加载问题.
 		// Eagerly load the ContextClosedEvent class to avoid weird classloader issues
 		// on application shutdown in WebLogic 8.1. (Reported by Dustin Woods.)
 		ContextClosedEvent.class.getName();
@@ -274,7 +274,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public String getId() {
-		return this.id;
+		return this.id; // org.springframework.context.support.ClassPathXmlApplicationContext@64bf3bbf
 	}
 
 	@Override
@@ -545,7 +545,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
-
+			// 准备上下文刷新
 			// Prepare this context for refreshing.
 			prepareRefresh();
 
@@ -617,11 +617,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
-		this.startupDate = System.currentTimeMillis();
-		this.closed.set(false);
-		this.active.set(true);
+		this.startupDate = System.currentTimeMillis(); //记录时间
+		this.closed.set(false);  // 重置容器的状态,设置关闭为false
+		this.active.set(true);   // 重置容器的状态,设置开启为true
 
-		if (logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {  // 日志允许debug,则输出相关日志
 			if (logger.isTraceEnabled()) {
 				logger.trace("Refreshing " + this);
 			}
@@ -629,14 +629,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				logger.debug("Refreshing " + getDisplayName());
 			}
 		}
-
+		// 初始化相关属性,用于对子类初始化
 		// Initialize any placeholder property sources in the context environment.
 		initPropertySources();
-
+		// 创建并获取环境对象，验证需要的属性文件是否都已经放入环境中
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
 		getEnvironment().validateRequiredProperties();
-
+		// 准备刷新前的应用程序监听器集合, 如果为空则补充,不为空,则重置
 		// Store pre-refresh ApplicationListeners...
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
@@ -646,7 +646,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			this.applicationListeners.clear();
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
 		}
-
+		// 创建刷新前的监听事件集合
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
 		this.earlyApplicationEvents = new LinkedHashSet<>();

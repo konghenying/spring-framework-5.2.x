@@ -124,7 +124,7 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
 		implements AutowireCapableBeanFactory {
 
-	/** Strategy for creating bean instances. */
+	/** Strategy for creating bean instances.创建bean实例的策略 */
 	private InstantiationStrategy instantiationStrategy;
 
 	/** Resolver strategy for method parameter names. */
@@ -174,10 +174,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	public AbstractAutowireCapableBeanFactory() {
 		super();
-		ignoreDependencyInterface(BeanNameAware.class);
+		ignoreDependencyInterface(BeanNameAware.class);  // 将 aware接口 放进 忽略列表
 		ignoreDependencyInterface(BeanFactoryAware.class);
 		ignoreDependencyInterface(BeanClassLoaderAware.class);
-		if (NativeDetector.inNativeImage()) {
+		if (NativeDetector.inNativeImage()) { //如果在映像构建的上下文中或映像运行时调用,则使用简单对象实例化策略,否则使用默认的cglib实例化策略
 			this.instantiationStrategy = new SimpleInstantiationStrategy();
 		}
 		else {
@@ -191,7 +191,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	public AbstractAutowireCapableBeanFactory(@Nullable BeanFactory parentBeanFactory) {
 		this();
-		setParentBeanFactory(parentBeanFactory);
+		setParentBeanFactory(parentBeanFactory);  //当parentBeanFactory为null时,没有意义返回null
 	}
 
 
@@ -272,7 +272,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		this.ignoredDependencyTypes.add(type);
 	}
 
-	/**
+	/**  忽略给定的依赖接口进行自动装配。
 	 * Ignore the given dependency interface for autowiring.
 	 * <p>This will typically be used by application contexts to register
 	 * dependencies that are resolved in other ways, like BeanFactory through

@@ -69,7 +69,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 		setConfigLocations(StringUtils.tokenizeToStringArray(location, CONFIG_LOCATION_DELIMITERS));
 	}
 
-	/**
+	/** 设置应用程序上下文的配置路径,没有会给默认值
 	 * Set the config locations for this application context.
 	 * <p>If not set, the implementation may use a default as appropriate.
 	 */

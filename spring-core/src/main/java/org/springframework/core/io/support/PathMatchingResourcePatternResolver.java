@@ -273,7 +273,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	public Resource getResource(String location) {
 		return getResourceLoader().getResource(location);
 	}
-
+	// 匹配localtionPattern 的
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
